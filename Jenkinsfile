@@ -42,7 +42,7 @@ pipeline {
                                 "volumes": [{
                                     "name": "kaniko-secret",
                                     "secret": {
-                                        "secretName": "kaniko-secret"
+                                        "secretName": "secret-kaniko-secret"
                                     }
                                 }]
                             }
