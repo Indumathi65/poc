@@ -1,12 +1,12 @@
 pipeline {
     agent any
-
+    
     environment {
-        REGISTRY = "appdemo.azureecr.io"
-        IMAGE_NAME = "test"
-        IMAGE_TAG = "latest"
+        REGISTRY = "your-registry"  // Docker Hub, ECR, or GCP Artifact Registry
+        IMAGE_NAME = "your-image-name"
+        IMAGE_TAG = "latest" // Change as needed, e.g., use BUILD_NUMBER
     }
-
+    
     stages {
         stage('Clone Repository') {
             steps {
@@ -14,15 +14,32 @@ pipeline {
             }
         }
 
-        stage('Build and Push Image with Kaniko') {
+        stage('Install Docker') {
             steps {
                 script {
-                    sh """
-                    /kaniko/executor \
-                    --context . \
-                    --dockerfile Dockerfile \
-                    --destination=$REGISTRY/$IMAGE_NAME:$IMAGE_TAG
-                    """
+                    sh '''
+                    if ! command -v docker &> /dev/null
+                    then
+                        echo "Docker not found, installing..."
+                        apt-get update && apt-get install -y docker.io
+                    fi
+                    '''
+                }
+            }
+        }
+
+        stage('Check Docker Version') {
+            steps {
+                script {
+                    sh "docker --version"
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t $REGISTRY/$IMAGE_NAME:$IMAGE_TAG ."
                 }
             }
         }
