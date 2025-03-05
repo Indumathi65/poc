@@ -1,12 +1,12 @@
 pipeline {
     agent any
-    
+
     environment {
-        REGISTRY = "appdemo.azureecr.io"  // Docker Hub, ECR, or GCP Artifact Registry
+        REGISTRY = "appdemo.azureecr.io"
         IMAGE_NAME = "test"
-        IMAGE_TAG = "latest" // Change as needed, e.g., use BUILD_NUMBER
+        IMAGE_TAG = "latest"
     }
-    
+
     stages {
         stage('Clone Repository') {
             steps {
@@ -14,10 +14,15 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build and Push Image with Kaniko') {
             steps {
                 script {
-                    sh "docker build -t $REGISTRY/$IMAGE_NAME:$IMAGE_TAG ."
+                    sh """
+                    /kaniko/executor \
+                    --context . \
+                    --dockerfile Dockerfile \
+                    --destination=$REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+                    """
                 }
             }
         }
