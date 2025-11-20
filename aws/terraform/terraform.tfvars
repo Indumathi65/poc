@@ -1,0 +1,12 @@
+aws_region = "ap-south-1"
+aws_account_id = "123456789012"
+vpc_cidr = "10.0.0.0/16"
+private_subnet_cidrs = ["10.0.1.0/24","10.0.2.0/24"]
+gcp_vpc_cidr = "10.50.0.0/16"
+cloudsql_private_ip = "10.50.3.10"
+cloudsql_dbname = "appdb"
+cloudsql_user = "replicator"
+cloudsql_password = "CHANGE_ME_SourcePass!"
+aurora_password = "CHANGE_ME_AuroraPass!"
+customer_gateway_ip = "34.123.45.67" # GCP VPN external IP (if pre-created)
+vpn_pre_shared_key = "CHANGE_ME_PSK"
